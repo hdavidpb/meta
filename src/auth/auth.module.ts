@@ -5,10 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UserRepository } from 'src/repositories/user.repository';
 import { JwtModule } from '@nestjs/jwt';
+import { profileRepository } from 'src/repositories/profile.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserRepository]),
+    TypeOrmModule.forFeature([UserRepository,profileRepository]),
 
     JwtModule.register({
       secret: 'my_secret_key',
