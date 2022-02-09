@@ -9,19 +9,20 @@ import { UserRepository } from 'src/repositories/user.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { profileRepository } from 'src/repositories/profile.repository';
+import { ITokenInterface } from 'src/interfaces/interfaces';
 @Injectable()
 export class AuthService {
   constructor(
-    private profileRepository:profileRepository,
+    private profileRepository: profileRepository,
     private userRepository: UserRepository,
     private jwtService: JwtService,
   ) {}
 
   async getAllUsers() {
     const users = await this.userRepository.find();
-const profile = await this.profileRepository.find({relations:["user"]})
+    const profile = await this.profileRepository.find({ relations: ['user'] });
     return {
-      profile
+      profile,
     };
   }
 
@@ -36,23 +37,19 @@ const profile = await this.profileRepository.find({relations:["user"]})
     if (user) throw new NotFoundException('user already exists');
 
     const userInstance = this.userRepository.create({
-      email:userData.email,
+      email: userData.email,
       password: hash,
-     
     });
-
 
     const savedUser = await this.userRepository.save(userInstance);
 
-
-    
     const profileInstance = this.profileRepository.create({
-      name:userData.name,
-      lastName:userData.lastName,
-      user: savedUser
-    })
+      name: userData.name,
+      lastName: userData.lastName,
+      user: savedUser,
+    });
 
-    const saveProfile = await this.profileRepository.save(profileInstance)
+    const saveProfile = await this.profileRepository.save(profileInstance);
 
     return {
       data: { username: saveProfile.name },
@@ -72,14 +69,12 @@ const profile = await this.profileRepository.find({relations:["user"]})
     const isMatch = await bcrypt.compare(userDto.password, user.password);
     if (!isMatch) throw new BadRequestException('invalid credentials');
 
-    const payload = {
+    const payload: ITokenInterface = {
       username: user.profile,
       sub: user.password,
       email: user.email,
     };
 
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    return {};
   }
 }
