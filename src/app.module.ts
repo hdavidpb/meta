@@ -11,9 +11,9 @@ const listEntities = Object.values(entities);
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
-      port: 5435,
+      port: 5432,
       username: 'postgres',
-      password: 'root',
+      password: '1214',
       database: 'postgres',
       entities: listEntities,
       synchronize: true,
