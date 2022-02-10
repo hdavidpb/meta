@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { MonthModule } from './month/month.module';
 
 import * as entities from './entities';
+import { JwtStrategy } from './auth/strategy/jwt.strategy';
+
 const listEntities = Object.values(entities);
 
 @Module({
@@ -22,6 +24,6 @@ const listEntities = Object.values(entities);
     MonthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [JwtStrategy],
 })
 export class AppModule {}

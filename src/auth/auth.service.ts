@@ -10,12 +10,13 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { profileRepository } from 'src/repositories/profile.repository';
 import { ITokenInterface } from 'src/interfaces/interfaces';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class AuthService {
   constructor(
     private profileRepository: profileRepository,
     private userRepository: UserRepository,
-    private jwtService: JwtService,
+    private jwtService: JwtService, // private configService: ConfigService,
   ) {}
 
   async getAllUsers() {
@@ -70,11 +71,16 @@ export class AuthService {
     if (!isMatch) throw new BadRequestException('invalid credentials');
 
     const payload: ITokenInterface = {
+      id: user.id,
       username: user.profile,
       sub: user.password,
       email: user.email,
     };
 
-    return {};
+    const token = this.jwtService.sign(payload);
+
+    return {
+      access_token: token,
+    };
   }
 }
