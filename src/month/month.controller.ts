@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Param,
+  ParseUUIDPipe,
   Post,
   Request,
   UseGuards,
@@ -41,5 +43,12 @@ export class MonthController {
     return {
       years: await this.monthService.getAllYearsFromUserId(res.user.id),
     };
+  }
+
+  @Delete('saving/:id')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  async deleteSaving(@Param('id', ParseUUIDPipe) id: string) {
+    return await this.monthService.deleteSaving(id);
   }
 }

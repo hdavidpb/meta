@@ -119,4 +119,35 @@ export class MonthService {
     };
     return res;
   }
+
+  async deleteSaving(yearId: string) {
+    const yearInstance = await this.yearRepository.findOne({
+      where: { id: yearId },
+    });
+    if (!yearInstance) throw new NotFoundException('Saving do no exist');
+
+    const monthsInstance = await this.monthRepository.find({
+      where: {
+        year: yearInstance,
+      },
+    });
+
+    for (let month of monthsInstance) {
+      const weekInstance = await this.weekRepository.find({
+        where: {
+          month: month,
+        },
+      });
+
+      for (let week of weekInstance) {
+        await this.weekRepository.delete(week.id);
+      }
+
+      const deleteMonth = await this.monthRepository.delete(month.id);
+      console.log('=====> Mes eliminado', deleteMonth);
+    }
+    const deleteYear = await this.yearRepository.delete(yearInstance.id);
+    console.log('Año eliminado=====>', deleteYear);
+    return 'Año eliminado con exito!';
+  }
 }
