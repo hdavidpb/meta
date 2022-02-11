@@ -45,7 +45,7 @@ export class MonthController {
     };
   }
 
-  @Delete('saving/:id')
+  @Delete('delete/:id')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   async deleteSaving(@Param('id', ParseUUIDPipe) id: string) {

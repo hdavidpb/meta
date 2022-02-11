@@ -148,6 +148,6 @@ export class MonthService {
     }
     const deleteYear = await this.yearRepository.delete(yearInstance.id);
     console.log('Año eliminado=====>', deleteYear);
-    return 'Año eliminado con exito!';
+    return yearInstance;
   }
 }
