@@ -35,15 +35,16 @@ export class MonthService {
         user: user,
       },
     });
-    if (isYear)
-      throw new BadRequestException('This user almost have this year');
+    // if (isYear)
+    //   throw new BadRequestException('This user almost have this year');
     const yearInstance = await this.yearRepository.create({
       year: createData.year,
       user: user,
+      description: createData.description,
     });
     const yearSaved = await this.yearRepository.save(yearInstance);
-    const weekQuote = createData.totalSaving / createData.quantityOfMonths / 4;
-    for (let i = 1; i <= createData.quantityOfMonths; i++) {
+    const weekQuote = createData.totalSaving / createData.finalMonth / 4;
+    for (let i = createData.initialMonth; i <= createData.finalMonth; i++) {
       const monthInsatance = await this.monthRepository.create({
         user,
         monthName: month[i - 1],

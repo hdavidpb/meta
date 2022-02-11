@@ -15,6 +15,9 @@ export class Year {
   id: string;
 
   @Column()
+  description: string;
+
+  @Column()
   year: string;
 
   @OneToMany((type) => Month, (month) => month.id)

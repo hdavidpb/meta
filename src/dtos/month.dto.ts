@@ -3,7 +3,11 @@ import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 export class MonthDTO {
   @IsNotEmpty()
   @IsNumber()
-  quantityOfMonths: number;
+  finalMonth: number;
+
+  @IsNotEmpty()
+  @IsNumber()
+  initialMonth: number;
 
   @IsNotEmpty()
   @IsString()
@@ -12,4 +16,8 @@ export class MonthDTO {
   @IsNotEmpty()
   @IsNumber()
   totalSaving: number;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 }
