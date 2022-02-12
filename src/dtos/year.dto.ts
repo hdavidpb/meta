@@ -8,4 +8,8 @@ export class yearDTO {
   @IsNotEmpty()
   @IsString()
   yearNumber: string;
+
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 }

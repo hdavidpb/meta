@@ -6,6 +6,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserRepository } from 'src/repositories/user.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { profileRepository } from 'src/repositories/profile.repository';
+import { JwtStrategy } from './strategy/jwt.strategy';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { profileRepository } from 'src/repositories/profile.repository';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, JwtStrategy],
 })
 export class AuthModule {}
