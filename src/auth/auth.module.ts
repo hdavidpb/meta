@@ -9,7 +9,7 @@ import { profileRepository } from 'src/repositories/profile.repository';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserRepository,profileRepository]),
+    TypeOrmModule.forFeature([UserRepository, profileRepository]),
 
     JwtModule.register({
       secret: 'my_secret_key',

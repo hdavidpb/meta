@@ -20,64 +20,65 @@ export class MonthService {
     private userRepository: UserRepository,
   ) {}
 
-  async createMonths(monthData: MonthDTO) {
-    const user = await this.userRepository.findOne({
-      where: { id: monthData.id },
-    });
+  async createMonths(token: string /*monthData: MonthDTO*/) {
+    console.log(token);
+    // const user = await this.userRepository.findOne({
+    //   where: { id: monthData.id },
+    // });
 
-    if (!user) throw new NotFoundException('user not found');
+    // if (!user) throw new NotFoundException('user not found');
 
-    const isYear = await this.yearRepository.findOne({
-      where: {
-        user: user,
-      },
-    });
+    // const isYear = await this.yearRepository.findOne({
+    //   where: {
+    //     user: user,
+    //   },
+    // });
 
-    if (isYear)
-      throw new BadRequestException('This user almost have this year');
+    // if (isYear)
+    //   throw new BadRequestException('This user almost have this year');
 
-    const yearInstance = await this.yearRepository.create({
-      year: monthData.year,
-      user: user,
-    });
-    const yearSaved = await this.yearRepository.save(yearInstance);
+    // const yearInstance = await this.yearRepository.create({
+    //   year: monthData.year,
+    //   user: user,
+    // });
+    // const yearSaved = await this.yearRepository.save(yearInstance);
 
-    const weekQuote = monthData.totalSaving / monthData.quantityOfMonths / 4;
+    // const weekQuote = monthData.totalSaving / monthData.quantityOfMonths / 4;
 
-    for (let i = 1; i <= monthData.quantityOfMonths; i++) {
-      const monthInsatance = await this.monthRepository.create({
-        user,
-        monthName: month[i - 1],
-        monthNumber: i,
-        year: yearSaved,
-      });
-      const monthSaved = await this.monthRepository.save(monthInsatance);
+    // for (let i = 1; i <= monthData.quantityOfMonths; i++) {
+    //   const monthInsatance = await this.monthRepository.create({
+    //     user,
+    //     monthName: month[i - 1],
+    //     monthNumber: i,
+    //     year: yearSaved,
+    //   });
+    //   const monthSaved = await this.monthRepository.save(monthInsatance);
 
-      for (let i = 1; i <= 4; i++) {
-        const weekInstance = await this.weekRepository.create({
-          weekName: `Semana ${i}`,
-          month: monthSaved,
-          quotePrice: Math.round(weekQuote),
-        });
+    //   for (let i = 1; i <= 4; i++) {
+    //     const weekInstance = await this.weekRepository.create({
+    //       weekName: `Semana ${i}`,
+    //       month: monthSaved,
+    //       quotePrice: Math.round(weekQuote),
+    //     });
 
-        const weekSave = await this.weekRepository.save(weekInstance);
-      }
-    }
+    //     const weekSave = await this.weekRepository.save(weekInstance);
+    //   }
+    // }
 
-    const allYear = await this.yearRepository.find({
-      where: {
-        user: user,
-      },
-    });
+    // const allYear = await this.yearRepository.find({
+    //   where: {
+    //     user: user,
+    //   },
+    // });
 
-    const alltMonths = await this.monthRepository.find({
-      where: {
-        year: yearSaved,
-      },
-      relations: ['weeks'],
-    });
+    // const alltMonths = await this.monthRepository.find({
+    //   where: {
+    //     year: yearSaved,
+    //   },
+    //   relations: ['weeks'],
+    // });
 
-    return alltMonths;
+    // return alltMonths;
   }
 
   async getAllMonthAndWeeksforAYear(yearData: yearDTO) {
