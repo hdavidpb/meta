@@ -2,10 +2,12 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 
 import { MonthDTO } from 'src/dtos/month.dto';
+import { updateQuoteDTO } from 'src/dtos/updateQuote.dto';
 import { yearDTO } from 'src/dtos/year.dto';
 import { Year } from 'src/entities';
 import { monthRepository } from 'src/repositories/month.repository';
@@ -91,15 +93,16 @@ export class MonthService {
     return yearInstance;
   }
 
-  async getAllMonthAndWeeksforAYear(yearData: yearDTO) {
+  async getAllMonthAndWeeksforAYear(userID: string, yearID: ParseUUIDPipe) {
+    console.log(yearID);
     const user = await this.userRepository.findOne({
       where: {
-        id: yearData.userId,
+        id: userID,
       },
     });
     const yearInstance = await this.yearRepository.findOne({
       where: {
-        year: yearData.yearNumber,
+        id: yearID,
         user: user,
       },
     });
@@ -114,7 +117,8 @@ export class MonthService {
       throw new BadRequestException('user or year do not exist');
 
     const res = {
-      year: yearData.yearNumber,
+      year: yearInstance.year,
+      description: yearInstance.description,
       month: monthInstance,
     };
     return res;
@@ -149,5 +153,25 @@ export class MonthService {
     const deleteYear = await this.yearRepository.delete(yearInstance.id);
     console.log('Año eliminado=====>', deleteYear);
     return yearInstance;
+  }
+
+  async updateQuotes(updateQuote: updateQuoteDTO[]) {
+    let updatedWeeks = [];
+    for (let i = 0; i < updateQuote.length; i++) {
+      const weekInstance = await this.weekRepository.findOne({
+        where: {
+          id: updateQuote[i].weekId,
+        },
+      });
+      if (!weekInstance) throw new NotFoundException('Week dont exist!');
+
+      const updateIsCancelWeek = await this.weekRepository.save({
+        ...weekInstance,
+        isCancel: updateQuote[i].isCancel,
+      });
+      updatedWeeks.push(updateIsCancelWeek);
+    }
+
+    return updatedWeeks;
   }
 }

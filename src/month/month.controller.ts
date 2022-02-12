@@ -7,12 +7,14 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Request,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { MonthDTO } from 'src/dtos/month.dto';
+import { updateQuoteDTO } from 'src/dtos/updateQuote.dto';
 import { yearDTO } from 'src/dtos/year.dto';
 import { MonthService } from './month.service';
 
@@ -29,11 +31,11 @@ export class MonthController {
     return await this.monthService.createMonths(res.user.id, monthData);
   }
 
-  @Post('quotes')
+  @Post('quotes/:year')
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
-  getAllQuotes(@Body() yearData: yearDTO) {
-    return this.monthService.getAllMonthAndWeeksforAYear(yearData);
+  getAllQuotes(@Param('year') year: ParseUUIDPipe, @Request() res: any) {
+    return this.monthService.getAllMonthAndWeeksforAYear(res.user.id, year);
   }
 
   @Get('years')
@@ -50,5 +52,11 @@ export class MonthController {
   @ApiBearerAuth()
   async deleteSaving(@Param('id', ParseUUIDPipe) id: string) {
     return await this.monthService.deleteSaving(id);
+  }
+  @Put('update-is-cancel-quotes')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  async updateQuotesByIds(@Body() updateQuote: updateQuoteDTO[]) {
+    return await this.monthService.updateQuotes(updateQuote);
   }
 }
