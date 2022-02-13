@@ -45,7 +45,11 @@ export class MonthService {
       description: createData.description,
     });
     const yearSaved = await this.yearRepository.save(yearInstance);
-    const weekQuote = createData.totalSaving / createData.finalMonth / 4;
+    let totalMonths = 0;
+    for (let j = createData.initialMonth; j <= createData.finalMonth; j++) {
+      totalMonths += 1;
+    }
+    const weekQuote = createData.totalSaving / (totalMonths * 4);
     for (let i = createData.initialMonth; i <= createData.finalMonth; i++) {
       const monthInsatance = await this.monthRepository.create({
         user,
