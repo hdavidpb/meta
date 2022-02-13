@@ -12,13 +12,12 @@ const listEntities = Object.values(entities);
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: '1214',
-      database: 'postgres',
+      url: process.env.DATABASE_URL,
       entities: listEntities,
       synchronize: true,
+      ssl: {
+        rejectUnauthorized: false,
+      },
     }),
     AuthModule,
     MonthModule,
