@@ -53,7 +53,7 @@ export class AuthService {
     const saveProfile = await this.profileRepository.save(profileInstance);
 
     return {
-      data: { username: saveProfile.name },
+      data: { username: `${saveProfile.name} ${saveProfile.lastName}` },
       message: 'User created sucessfully',
       statusCode: HttpStatus.OK,
     };
@@ -66,6 +66,8 @@ export class AuthService {
       },
     });
     if (!user) throw new BadRequestException('invalid credentials');
+
+    const profile = await this.profileRepository.findOne({ where: { user } });
 
     const isMatch = await bcrypt.compare(userDto.password, user.password);
     if (!isMatch) throw new BadRequestException('invalid credentials');
@@ -81,6 +83,29 @@ export class AuthService {
 
     return {
       access_token: token,
+      userName: `${profile.name} ${profile.lastName}`,
+    };
+  }
+
+  async verifyUser(id: string) {
+    const user = await this.userRepository.findOne({
+      where: {
+        id,
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('Token de acceso inválido');
+    }
+
+    const profile = await this.profileRepository.findOne({
+      where: {
+        user,
+      },
+    });
+    return {
+      userName: `${profile.name} ${profile.lastName}`,
+      isAuthenticated: true,
     };
   }
 }

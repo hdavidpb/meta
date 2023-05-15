@@ -3,7 +3,7 @@ services:
   database:
     image: postgres:13
     environment:
-      - POSTGRES_DB=meta
+      - POSTGRES_DB=domina_db_dev
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
     ports:

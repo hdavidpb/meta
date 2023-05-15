@@ -3,12 +3,12 @@ import {
   PrimaryGeneratedColumn,
   Column,
   OneToOne,
-  OneToMany,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { Year } from './years.entity';
-import { Month } from './months.entity';
+
 import { Profile } from './profiles.entity';
+import { Task } from './tasks.entity';
 
 @Entity()
 export class User {
@@ -24,9 +24,13 @@ export class User {
   @OneToOne(() => Profile, (profile) => profile.id)
   profile: Profile;
 
-  @OneToMany(() => Month, (month) => month.user)
-  month: Month[];
+  @JoinColumn()
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Task[];
 
-  @OneToMany((type) => Year, (year) => year.id)
-  year: Year[];
+  // @OneToMany(() => Month, (month) => month.user)
+  // month: Month[];
+
+  // @OneToMany((type) => Year, (year) => year.id)
+  // year: Year[];
 }

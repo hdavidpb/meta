@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { MonthModule } from './month/month.module';
-
 import * as entities from './entities';
 import { JwtStrategy } from './auth/strategy/jwt.strategy';
+import { TaskModule } from './task/task.module';
 
 const listEntities = Object.values(entities);
 
@@ -12,15 +11,16 @@ const listEntities = Object.values(entities);
   imports: [
     TypeOrmModule.forRoot({
       type: 'postgres',
-      url: process.env.DATABASE_URL,
+      host: 'localhost',
+      port: 5435,
+      username: 'root',
+      password: 'root',
+      database: 'domina_db_dev',
       entities: listEntities,
       synchronize: true,
-      ssl: {
-        rejectUnauthorized: false,
-      },
     }),
     AuthModule,
-    MonthModule,
+    TaskModule,
   ],
   controllers: [],
   providers: [JwtStrategy],
